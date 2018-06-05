@@ -181,7 +181,7 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 /**
  * Add service worker.
  */
-registerServiceWorker();
+//registerServiceWorker();
 
 /*This function registers the service worker
 */
