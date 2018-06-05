@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta name="Viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <link rel="stylesheet" href="css/styles.css">
+  <title>Restaurant Reviews</title>
+</head>
+
+<body>
+  <header>
+    <a href="#maincontent" class="skip-link">Skip to main content</a>
+    <nav>
+      <h1><a href="/">Restaurant Reviews</a></h1>
+    </nav>
+  </header>
+
+  <main id="maincontent" class="maincontent" tabindex="-1">
+    <section id="map-container" class="map-container">
+      <div id="map" class="map" role="application"></div>
+    </section>
+
+    <section class="container">
+      <div class="filter-options">
+        <h3>Filter Results</h3>
+        <label for="neighborhoods-select" class="visually-hidden">Neighborhoods</label>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <label for="cuisines-select" class="visually-hidden">Cuisines</label>
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <option value="all">All Cuisines</option>
+        </select>
+      </div>
+
+      <div id="restaurant-container" class="restaurant-container">
+        <h3>Restaurants</h3>
+        <ul id="restaurants-list" class="restaurants-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiayAe2b4j6VirZdjCmnA_r_RRZvzycPg&libraries=places&callback=initMap"></script>
+
+
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>
