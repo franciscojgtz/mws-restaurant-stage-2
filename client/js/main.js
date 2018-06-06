@@ -1,6 +1,6 @@
 let restaurants,
   neighborhoods,
-  cuisines
+  cuisines;
 var map
 var markers = []
 
@@ -181,7 +181,7 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 /**
  * Add service worker.
  */
-//registerServiceWorker();
+registerServiceWorker();
 
 /*This function registers the service worker
 */

@@ -1,15 +1,16 @@
+// import idb from 'idb';
+// const idb = require('idb');
 /**
  * Common database helper functions.
  */
 class DBHelper {
-
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `http://localhost:1337/restaurants`;
+    return 'http://localhost:1337/restaurants';
   }
 
   /**
@@ -17,12 +18,11 @@ class DBHelper {
    */
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL)
-      .then(response => {
-        return response.json();
-      })
-      .then(restaurants => {
+      .then(response => response.json())
+      .then((restaurants) => {
+        this.openIDB(restaurants);
         callback(null, restaurants);
-      }).catch(err => {
+      }).catch((err) => {
         const error = (`Request failed. Returned status of ${err}`);
         callback(error, null);
       });
@@ -88,7 +88,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
-        let results = restaurants
+        let results = restaurants;
         if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
         }
@@ -110,9 +110,9 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all neighborhoods from all restaurants
-        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
         // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
+        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i);
         callback(null, uniqueNeighborhoods);
       }
     });
@@ -128,9 +128,9 @@ class DBHelper {
         callback(error, null);
       } else {
         // Get all cuisines from all restaurants
-        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
         // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
+        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i);
         callback(null, uniqueCuisines);
       }
     });
@@ -147,7 +147,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    //added .jpg so it looks for a jpg image
+    // added .jpg so it looks for a jpg image
     return (`/img/${restaurant.photograph}.jpg`);
   }
 
@@ -159,10 +159,33 @@ class DBHelper {
       position: restaurant.latlng,
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
+      map,
+      animation: google.maps.Animation.DROP
+ },);
     return marker;
   }
 
+  static openIDB(restaurants) {
+    console.log('openIDB');
+    if (!navigator.serviceWorker) {
+      return;
+    }
+
+    const dbPromise = idb.open('restaurants-reviews', 1, (upgradeDb) => {
+      const store = upgradeDb.createObjectStore('restaurants', {
+        keyPath: 'id',
+      });
+    });
+
+    dbPromise.then((db) => {
+      if (!db) return;
+      const tx = db.transaction('restaurants', 'readwrite'); console.log(tx);
+      const restaurantsStore = tx.objectStore('restaurants');
+      restaurants.forEach((restaurant) => {
+        restaurantsStore.put(restaurant);
+      });
+    });
+  }
+
 }
+
