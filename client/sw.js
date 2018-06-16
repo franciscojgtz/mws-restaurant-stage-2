@@ -1,5 +1,5 @@
 const staticCacheName = 'restaurant-reviews-static-v3';
-
+//
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(staticCacheName).then(cache => cache.addAll([
     '/',
