@@ -1,7 +1,7 @@
-const staticCacheName = 'restaurant-reviews-static-v2';
+const staticCacheName = 'restaurant-reviews-static-v3';
 const allCaches = [
   staticCacheName,
-];
+];//
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(staticCacheName).then(cache => cache.addAll([
@@ -22,6 +22,7 @@ self.addEventListener('install', (event) => {
     '/js/dbhelper.js',
     '/js/main.js',
     '/js/restaurant_info.js',
+    '/node_modules/idb/lib/idb.js',
   ])));
 });
 

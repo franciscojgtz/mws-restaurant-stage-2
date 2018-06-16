@@ -10,17 +10,21 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return 'http://localhost:1337/restaurants';
+    //return 'http://localhost:1337/restaurants';
   }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
+    this.showCachedRestaurants().then(restaurants => {
+      callback(null, restaurants);
+    });
     fetch(DBHelper.DATABASE_URL)
       .then(response => response.json())
       .then((restaurants) => {
-        this.openIDB(restaurants);
+        resetRestaurants(restaurants);
+        DBHelper.placeRestaurantsIntoIDB(restaurants);
         callback(null, restaurants);
       }).catch((err) => {
         const error = (`Request failed. Returned status of ${err}`);
@@ -165,21 +169,29 @@ class DBHelper {
     return marker;
   }
 
-  static openIDB(restaurants) {
-    console.log('openIDB');
+  /**
+   * Open IDB
+   */
+  static openIDB () {
     if (!navigator.serviceWorker) {
-      return;
+      return Promise.resolve();
     }
-
-    const dbPromise = idb.open('restaurants-reviews', 1, (upgradeDb) => {
+    return idb.open('restaurants-reviews', 1, (upgradeDb) => {
       const store = upgradeDb.createObjectStore('restaurants', {
         keyPath: 'id',
       });
     });
+  }
 
+  /**
+   * Place Restaurants in IDB
+   * @param {*} restaurants 
+   */
+  static placeRestaurantsIntoIDB (restaurants) { 
+    const dbPromise = DBHelper.openIDB(); 
     dbPromise.then((db) => {
       if (!db) return;
-      const tx = db.transaction('restaurants', 'readwrite'); console.log(tx);
+      const tx = db.transaction('restaurants', 'readwrite');
       const restaurantsStore = tx.objectStore('restaurants');
       restaurants.forEach((restaurant) => {
         restaurantsStore.put(restaurant);
@@ -187,5 +199,16 @@ class DBHelper {
     });
   }
 
-}
+  static showCachedRestaurants() {
+    const dbPromise = DBHelper.openIDB(); 
+    return dbPromise.then((db) => {
+      if (!db) return Promise.resolve();
+      const data = db.transaction('restaurants').objectStore('restaurants');
+      
+      return data.getAll().then( restaurants => { 
+        return restaurants;
+      });
+    });
+  }
 
+}
