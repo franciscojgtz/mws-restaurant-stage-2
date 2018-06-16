@@ -17,7 +17,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    this.showCachedRestaurants().then(restaurants => {
+    this.showCachedRestaurants().then((restaurants) => {
       callback(null, restaurants);
     });
     fetch(DBHelper.DATABASE_URL)
@@ -185,10 +185,10 @@ class DBHelper {
 
   /**
    * Place Restaurants in IDB
-   * @param {*} restaurants 
+   * @param {*} restaurants
    */
-  static placeRestaurantsIntoIDB (restaurants) { 
-    const dbPromise = DBHelper.openIDB(); 
+  static placeRestaurantsIntoIDB(restaurants) {
+    const dbPromise = DBHelper.openIDB();
     dbPromise.then((db) => {
       if (!db) return;
       const tx = db.transaction('restaurants', 'readwrite');
@@ -200,15 +200,11 @@ class DBHelper {
   }
 
   static showCachedRestaurants() {
-    const dbPromise = DBHelper.openIDB(); 
+    const dbPromise = DBHelper.openIDB();
     return dbPromise.then((db) => {
       if (!db) return Promise.resolve();
       const data = db.transaction('restaurants').objectStore('restaurants');
-      
-      return data.getAll().then( restaurants => { 
-        return restaurants;
-      });
+      return data.getAll().then(restaurants => restaurants);
     });
   }
-
 }
