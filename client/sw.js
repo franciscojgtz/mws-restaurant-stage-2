@@ -1,7 +1,4 @@
 const staticCacheName = 'restaurant-reviews-static-v3';
-const allCaches = [
-  staticCacheName,
-];//
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(staticCacheName).then(cache => cache.addAll([
@@ -26,32 +23,17 @@ self.addEventListener('install', (event) => {
   ])));
 });
 
-self.addEventListener('activate', event => { console.log(event);
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(cacheName => {
-          return cacheName.startsWith('restaurant-reviews-') &&
-                  cacheName != staticCacheName;
-        }).map(cacheName => {
-            	console.log(`delete ${cacheName}`);
-          return caches.delete(cacheName);
-        })
-      );
-    })
-  );
+self.addEventListener('activate', (event) => {
+  event.waitUntil(caches.keys().then(cacheNames => Promise.all(cacheNames.filter(cacheName => cacheName.startsWith('restaurant-reviews-') &&
+                  cacheName !== staticCacheName).map(cacheName => caches.delete(cacheName)))));
 });
 
-self.addEventListener('fetch', event => {
-  //console.log(event.request.url);
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
+self.addEventListener('fetch', (event) => {
+  event.respondWith(caches.match(event.request)
+    .then(cachedResponse => cachedResponse || fetch(event.request)));
 });
 
-self.addEventListener('message', function(event) {
-  if(event.data.activate == 'true');
+self.addEventListener('message', (event) => {
+  if (event.data.activate === 'true');
   self.skipWaiting();
 });
