@@ -140,8 +140,10 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.className = 'lazyload';
   image.alt = `${restaurant.name} restaurant, ${restaurant.photo_description}`;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  //image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute("data-src", DBHelper.imageUrlForRestaurant(restaurant));
   li.append(image);
 
   const name = document.createElement('h3');
