@@ -10,6 +10,11 @@ const imagemin = require('gulp-imagemin');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 const imageminPngquant = require('imagemin-pngquant');
+const imageresize = require('gulp-image-resize');
+const rename = require('gulp-rename');
+const gm = require('gulp-gm');
+const newer = require('gulp-newer');
+const plumber = require('gulp-plumber');
 
 const paths = {
   styles: {
@@ -28,8 +33,49 @@ const paths = {
   },
 };
 
-function images() {
-  return gulp.src(paths.images.src)
+function optimizeImages() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(rename({ suffix: '_800' }))
+    .pipe(imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false },
+        ],
+      }),
+    ]))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function resizeImages400() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(imageresize({ width: 400 }))
+    .pipe(rename({ suffix: '_400' }))
+    .pipe(imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false },
+        ],
+      }),
+    ]))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+
+function resizeImages600() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(imageresize({ width: 600 }))
+    .pipe(rename({ suffix: '_600' }))
     .pipe(imagemin([
       imagemin.gifsicle({ interlaced: true }),
       imagemin.jpegtran({ progressive: true }),
@@ -86,7 +132,9 @@ function watch() {
   gulp.watch('*.html', reload);
 }
 
+exports.resizeImages400 = resizeImages400;
+exports.resizeImages600 = resizeImages600;
 exports.scripts = scripts;
-exports.images = images;
+exports.optimizeImages = optimizeImages;
 exports.styles = styles;
 exports.watch = watch;
