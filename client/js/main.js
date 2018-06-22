@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+  ((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
     } else {
@@ -139,14 +139,32 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
+  const pictureElement = document.createElement('picture');
+  const webPSource = document.createElement('source');
+  const jpgSource = document.createElement('source');
+
+  
+//me quede aqui--Tengo que trabajar en sizes 
+// solo 1x displays
+
+
   image.className = 'restaurant-img';
   image.className = 'lazyload';
   image.alt = `${restaurant.name} restaurant, ${restaurant.photo_description}`;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.setAttribute("data-src", DBHelper.imageUrlForRestaurant(restaurant));
-  const restImg = DBHelper.imageUrlForRestaurant(restaurant).slice(0, -4)
-  image.srcset = `${restImg}_400.jpg 400w, ${restImg}_600.jpg 600w, ${restImg}_800.jpg 800w,`;
-  li.append(image);
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+  const restImg = DBHelper.imageUrlForRestaurant(restaurant).slice(0, -4);
+  const imgSizes = '(max-width: 559px) calc(100vw - 4rem - 4px), (min-width: 560px) and (max-width: 1023px) calc(0.5 * 100vw - 5rem - 2px), (min-width: 1023px) calc(0.333 * 100vw - 5rem - 2px), calc(100vw - 6rem - 2px)';
+  webPSource.srcset = ` ${restImg}_300.webp 300w, ${restImg}_400.webp 400w, ${restImg}_600.webp 600w, ${restImg}_800.webp 800w`;
+  webPSource.type = 'image/webp';
+  webPSource.sizes = imgSizes;
+  jpgSource.srcset = `${restImg}_400.jpg 400w, ${restImg}_600.jpg 600w, ${restImg}_800.jpg 800w`;
+  jpgSource.type = 'image/jpg';
+  jpgSource.sizes = imgSizes;
+  pictureElement.append(webPSource);
+  pictureElement.append(jpgSource);
+  pictureElement.append(image);
+  li.append(pictureElement);
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;

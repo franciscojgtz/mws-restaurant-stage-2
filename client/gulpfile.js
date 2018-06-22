@@ -15,6 +15,7 @@ const rename = require('gulp-rename');
 const gm = require('gulp-gm');
 const newer = require('gulp-newer');
 const plumber = require('gulp-plumber');
+const webp = require('gulp-webp');
 
 const paths = {
   styles: {
@@ -90,6 +91,78 @@ function resizeImages600() {
     .pipe(gulp.dest(paths.images.dest));
 }
 
+function webP300() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 300 }))
+    .pipe(rename({ suffix: '_300' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP350() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 350 }))
+    .pipe(rename({ suffix: '_350' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP400() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 400 }))
+    .pipe(rename({ suffix: '_400' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP450() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 450 }))
+    .pipe(rename({ suffix: '_450' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP500() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 500 }))
+    .pipe(rename({ suffix: '_500' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP550() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 550 }))
+    .pipe(rename({ suffix: '_550' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP600() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 600 }))
+    .pipe(rename({ suffix: '_600' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
+function webP800() {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(webp())
+    .pipe(imageresize({ width: 800 }))
+    .pipe(rename({ suffix: '_800' }))
+    .pipe(gulp.dest(paths.images.dest));
+}
+
 function scripts() {
   return gulp.src(paths.js.src)
     .pipe(babel({
@@ -120,6 +193,15 @@ function reload(done) {
   done();
 }
 
+function browserSyncServe(done) {
+  browserSync.init({
+    server: {
+      baseDir: './'
+    }
+  });
+  done();
+}
+
 function watch() {
   browserSync.init({
     injectChanges: true,
@@ -132,6 +214,14 @@ function watch() {
   gulp.watch('*.html', reload);
 }
 
+exports.webP300 = webP300;
+exports.webP350 = webP350;
+exports.webP400 = webP400;
+exports.webP450 = webP450;
+exports.webP500 = webP500;
+exports.webP550 = webP550;
+exports.webP600 = webP600;
+exports.webP800 = webP800;
 exports.resizeImages400 = resizeImages400;
 exports.resizeImages600 = resizeImages600;
 exports.scripts = scripts;
