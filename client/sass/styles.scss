@@ -302,12 +302,12 @@ nav[aria-label="breadcrumb"] {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 500;
 }
 
 .inside .map-container {
   background: blue none repeat scroll 0 0;
-  height: 500px;
+  height: 400px;
   width: 100%;
 }
 
