@@ -60,6 +60,23 @@ function scripts() {
     .pipe(uglify())
     .pipe(gulp.dest(paths.scripts.dest));
 }
+const resizeImageTasks = [];
+
+const imgSizes = ['700', '750', '650'];
+imgSizes.forEach(size => {
+    
+});
+
+function webPImages() {
+    const imgSizes = ['300', '350', '400'];
+  return imgSizes.map(size => gulp.src(`${paths.images.src}.jpg`)
+  .pipe(plumber())
+  .pipe(webp())
+  .pipe(imageresize({ width: size }))
+  .pipe(rename({ suffix: '_size' }))
+  .pipe(gulp.dest(paths.images.dest)));
+  
+}
 
 function reload(done) {
   server.reload();
