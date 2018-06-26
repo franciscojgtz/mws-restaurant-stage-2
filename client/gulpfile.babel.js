@@ -10,12 +10,22 @@ import postcss from 'gulp-postcss';
 import babel from 'gulp-babel';
 import uglify from 'gulp-uglify';
 import concat from 'gulp-concat';
+import plumber from 'gulp-plumber';
+import webp from 'gulp-webp';
+import imageresize from 'gulp-image-resize';
+import rename from 'gulp-rename';
+import imagemin from 'gulp-imagemin';
 
 const server = browserSync.create();
 
 function clean(done) {
   del(['css']);
   del(['js']);
+  done();
+}
+
+function cleanImages(done) {
+  del(['img']);
   done();
 }
 
@@ -60,22 +70,57 @@ function scripts() {
     .pipe(uglify())
     .pipe(gulp.dest(paths.scripts.dest));
 }
-const resizeImageTasks = [];
 
-const imgSizes = ['700', '750', '650'];
-imgSizes.forEach(size => {
-    
-});
+function webPImages(done) {
+  const imgSizes = ['300', '350', '400', '450', '500', '550', '600', '700', '800'];
+  return imgSizes.forEach(size =>
+    gulp.src(`${paths.images.src}.jpg`)
+      .pipe(plumber())
+      .pipe(webp())
+      .pipe(imageresize({ width: size }))
+      .pipe(rename({ suffix: `_${size}` }))
+      .pipe(gulp.dest(paths.images.dest))
+      .on('finish', done));
+}
 
-function webPImages() {
-    const imgSizes = ['300', '350', '400'];
-  return imgSizes.map(size => gulp.src(`${paths.images.src}.jpg`)
-  .pipe(plumber())
-  .pipe(webp())
-  .pipe(imageresize({ width: size }))
-  .pipe(rename({ suffix: '_size' }))
-  .pipe(gulp.dest(paths.images.dest)));
-  
+function jpgImages(done) {
+  const imgSizes = ['300', '350', '400', '450', '500', '550', '600', '700', '800'];
+  return imgSizes.forEach(size =>
+    gulp.src(`${paths.images.src}.jpg`)
+      .pipe(plumber())
+      .pipe(imagemin([
+        imagemin.gifsicle({ interlaced: true }),
+        imagemin.jpegtran({ progressive: true }),
+        imagemin.optipng({ optimizationLevel: 5 }),
+        imagemin.svgo({
+          plugins: [
+            { removeViewBox: true },
+            { cleanupIDs: false },
+          ],
+        }),
+      ]))
+      .pipe(imageresize({ width: size }))
+      .pipe(rename({ suffix: `_${size}` }))
+      .pipe(gulp.dest(paths.images.dest))
+      .on('finish', done));
+}
+
+function optimizeImages(done) {
+  return gulp.src(`${paths.images.src}.jpg`)
+    .pipe(plumber())
+    .pipe(imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false },
+        ],
+      }),
+    ]))
+    .pipe(gulp.dest(paths.images.dest))
+    .on('finish', done);
 }
 
 function reload(done) {
@@ -97,5 +142,11 @@ function watch() {
   gulp.watch(paths.scripts.src, gulp.series(scripts, reload));
 }
 
+
 const dev = gulp.series(clean, styles, scripts, serve, watch);
+
+export { optimizeImages };
+export { webPImages };
+export { jpgImages };
+export { cleanImages };
 export default dev;
