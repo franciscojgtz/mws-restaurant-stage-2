@@ -27,6 +27,7 @@ self.addEventListener('install', (event) => {
     '/js/dbhelper.js',
     '/js/main.js',
     '/js/restaurant_info.js',
+    '/node_modules/lazysizes/lazysizes.min.js',
     '/node_modules/idb/lib/idb.js',
   ])));
 });

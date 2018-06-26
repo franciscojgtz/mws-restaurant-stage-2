@@ -17,16 +17,22 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    /*this.showCachedRestaurants().then((restaurants) => {
-      callback(null, restaurants);
-    });*/
-    fetch(DBHelper.DATABASE_URL)
-      .then(response => response.json())
-      .then((restaurants) => {
-        //resetRestaurants(restaurants);
-        DBHelper.placeRestaurantsIntoIDB(restaurants);
-        callback(null, restaurants);
-      }).catch((err) => {
+    this.showCachedRestaurants().then((cachedRestaurants) => {
+      if (cachedRestaurants === undefined || cachedRestaurants.length === 0) {
+        // array empty or does not exist
+        fetch(DBHelper.DATABASE_URL)
+          .then(response => response.json())
+          .then((fetchedRestaurants) => {
+            DBHelper.placeRestaurantsIntoIDB(fetchedRestaurants);
+            console.log('restaurants from fetch');
+            callback(null, fetchedRestaurants);
+          });
+      } else {
+        console.log('restaurants from cache');
+        callback(null, cachedRestaurants);
+      }
+    })
+      .catch((err) => {
         const error = (`Request failed. Returned status of ${err}`);
         callback(error, null);
       });
@@ -159,17 +165,18 @@ class DBHelper {
    * Map marker for a restaurant.
    */
   static mapMarkerForRestaurant(restaurant, map) {
-    // https://leafletjs.com/reference-1.3.0.html#marker  
-    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
+    // https://leafletjs.com/reference-1.3.0.html#marker
+    const marker = new L.marker(
+      [restaurant.latlng.lat, restaurant.latlng.lng],
       {
         title: restaurant.name,
         alt: restaurant.name,
-        url: DBHelper.urlForRestaurant(restaurant)
+        url: DBHelper.urlForRestaurant(restaurant),
       },
     );
     marker.addTo(newMap);
     return marker;
-  } 
+  }
 
   /**
    * Open IDB

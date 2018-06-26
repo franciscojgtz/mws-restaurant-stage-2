@@ -1,3 +1,7 @@
+//const idb = indexedDB;
+//const dbHelper = new DBHelper(idb);
+
+
 let restaurants,
   neighborhoods,
   cuisines;
@@ -17,10 +21,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  ((error, neighborhoods) => {
+  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
     } else {
+      console.log(neighborhoods);
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
     }
@@ -48,6 +53,7 @@ const fetchCuisines = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
+      console.log(cuisines);
       self.cuisines = cuisines;
       fillCuisinesHTML();
     }
@@ -150,11 +156,6 @@ const createRestaurantHTML = (restaurant) => {
   const pictureElement = document.createElement('picture');
   const webPSource = document.createElement('source');
   const jpgSource = document.createElement('source');
-
-  
-  //me quede aqui--Tengo que trabajar en sizes 
-  // solo 1x displays
-
 
   image.className = 'restaurant-img';
   image.className = 'lazyload';
@@ -279,4 +280,4 @@ function registerServiceWorker() {
 /**
  * Add service worker.
  */
-//registerServiceWorker();
+registerServiceWorker();
