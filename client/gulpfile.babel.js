@@ -140,6 +140,7 @@ function serve(done) {
 function watch() {
   gulp.watch(paths.styles.src, gulp.series(styles, reload));
   gulp.watch(paths.scripts.src, gulp.series(scripts, reload));
+  gulp.watch('*.html', reload);
 }
 
 
