@@ -161,19 +161,15 @@ const createRestaurantHTML = (restaurant) => {
   image.className = 'lazyload';
   image.setAttribute('data-sizes', 'auto');
   image.alt = `${restaurant.name} restaurant, ${restaurant.photo_description}`;
-  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  
-  //
+  image.src = DBHelper.imageUrlForRestaurant(restaurant);
   const restImg = DBHelper.imageUrlForRestaurant(restaurant).slice(0, -4);
   const imgSizes = '(max-width: 559px) calc(100vw - 4rem - 4px), (min-width: 560px) and (max-width: 1023px) calc(0.5 * 100vw - 5rem - 2px), (min-width: 1023px) calc(0.333 * 100vw - 5rem - 2px), calc(100vw - 6rem - 2px)';
-  image.setAttribute('data-src', `${restImg}_400.jpg`);
+  image.setAttribute('data-src', `${DBHelper.imageUrlForRestaurant(restaurant)}`);
   webPSource.setAttribute('data-srcset', `${restImg}_300.webp 300w, ${restImg}_350.webp 350w, ${restImg}_400.webp 400w, ${restImg}_450.webp 450w, ${restImg}_500.webp 500w, ${restImg}_550.webp 550w, ${restImg}_600.webp 600w, ${restImg}_700.webp 700w, ${restImg}_800.webp 800w`);
-  // webPSource.srcset = `${restImg}_300.webp 300w, ${restImg}_400.webp 400w, ${restImg}_600.webp 600w, ${restImg}_800.webp 800w`;
   webPSource.type = 'image/webp';
   webPSource.sizes = imgSizes;
 
   jpgSource.setAttribute('data-srcset', `${restImg}_300.jpg 300w, ${restImg}_350.jpg 350w, ${restImg}_400.jpg 400w, ${restImg}_450.jpg 450w, ${restImg}_500.jpg 500w, ${restImg}_550.jpg 550w, ${restImg}_600.jpg 600w, ${restImg}_700.jpg 700w, ${restImg}_800.jpg 800w`);
-  // jpgSource.srcset = `${restImg}_400.jpg 400w, ${restImg}_600.jpg 600w, ${restImg}_800.jpg 800w`;
   jpgSource.type = 'image/jpg';
   jpgSource.sizes = imgSizes;
 
