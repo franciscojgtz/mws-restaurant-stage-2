@@ -37,6 +37,7 @@ self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
 
   if (requestUrl.pathname.startsWith('/img/')) {
+    console.log(event.request);
     event.respondWith(servePhoto(event.request));
     return;
   }
