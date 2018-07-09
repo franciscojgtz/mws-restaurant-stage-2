@@ -209,7 +209,6 @@ function getPhotoDescription(photograph) {
 /**
  * Create Responsive image
  */
-
 function createResponsiveImage(restaurant) {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
