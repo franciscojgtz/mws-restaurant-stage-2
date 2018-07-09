@@ -1,18 +1,18 @@
-//const idb = indexedDB;
-//const dbHelper = new DBHelper(idb);
+// const idb = indexedDB;
+// const dbHelper = new DBHelper(idb);
 
 
 let restaurants,
   neighborhoods,
   cuisines;
-var newMap;
-var markers = [];
+let newMap;
+let markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  initMap1(); // added 
+  initMap1(); // added
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -81,7 +81,7 @@ const initMap1 = () => {
   self.newMap = L.map('map', {
     center: [40.722216, -73.987501],
     zoom: 12,
-    scrollWheelZoom: false
+    scrollWheelZoom: false,
   });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
     mapboxToken: 'pk.eyJ1IjoiZnJhbmNpc2Nvamd0eiIsImEiOiJjamlzOHRncjEwbHU4M3ByeTdpenN5M3YwIn0.y1U7z4RQa0J58bhLtiYlqg',
@@ -89,7 +89,7 @@ const initMap1 = () => {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    id: 'mapbox.streets'
+    id: 'mapbox.streets',
   }).addTo(newMap);
   setTimeout(() => { newMap.invalidateSize(); }, 400);
   updateRestaurants();
@@ -160,8 +160,8 @@ const createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   image.className = 'lazyload';
   image.setAttribute('data-sizes', 'auto');
-  image.alt = `${restaurant.name} restaurant, ${restaurant.photo_description}`;
-  //image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = `${restaurant.name} restaurant, ${getPhotoDescription(restaurant.photograph)}`;
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   const restImg = DBHelper.imageUrlForRestaurant(restaurant).slice(0, -4);
   const imgSizes = '(max-width: 559px) calc(100vw - 4rem - 4px), (min-width: 560px) and (max-width: 1023px) calc(0.5 * 100vw - 5rem - 2px), (min-width: 1023px) calc(0.333 * 100vw - 5rem - 2px), calc(100vw - 6rem - 2px)';
   image.setAttribute('data-src', `${DBHelper.imageUrlForRestaurant(restaurant)}`);
@@ -211,7 +211,37 @@ const addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
-}; 
+};
+
+/**
+ * Get image alt
+ */
+function getPhotoDescription(photograph) {
+  switch (parseInt(photograph)) {
+    case 1:
+      return 'classical indoor decoration';
+    case 2:
+      return 'hand-made cheese pizza';
+    case 3:
+      return 'modern dining atmosphere';
+    case 4:
+      return 'colorful and dynamic entrance';
+    case 5:
+      return 'popular friendly environment';
+    case 6:
+      return 'patriotic and popular diner';
+    case 7:
+      return 'cozy welcoming entrance';
+    case 8:
+      return 'daytime clean entrance';
+    case 9:
+      return 'customers enjoying their meal';
+    case 10:
+      return 'very clean modern-mexican environment';
+    default:
+      return 'error';
+  }
+}
 
 function notifySWUpdates(reg) {
   console.log('There is a new Service Worker available');
