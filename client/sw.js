@@ -18,6 +18,7 @@ self.addEventListener('install', (event) => {
     '/css/min_width_1024.css',
     '/css/min_width_1600.css',
     'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
+    'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js',
     '/data/restaurants.json',
     '/js/dbhelper.js',
     '/js/main.js',
