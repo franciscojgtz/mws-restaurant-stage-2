@@ -152,9 +152,10 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
-  const pictureElement = createResponsiveImage(restaurant);
-  console.log(pictureElement);
-  li.append(pictureElement);
+  if (restaurant.photograph) {
+    const pictureElement = createResponsiveImage(restaurant);
+    li.append(pictureElement);
+  }
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;

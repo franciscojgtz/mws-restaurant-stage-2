@@ -71,7 +71,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  createResponsiveImage(restaurant);
+  if (restaurant.photograph) {
+    createResponsiveImage(restaurant);
+  }
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
