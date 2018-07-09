@@ -71,10 +71,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = `${restaurant.name} restaurant, ${restaurant.photo_description}`;
+  createResponsiveImage(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -168,13 +165,58 @@ const fillBreadcrumb = (restaurant = self.restaurant) => {
  */
 const getParameterByName = (name, url) => {
   if (!url)
-    {url = window.location.href;}
+  {url = window.location.href;}
   name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
     results = regex.exec(url);
   if (!results)
-    {return null;}
+  {return null;}
   if (!results[2])
-    {return '';}
+  {return '';}
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+/**
+ * Get image alt
+ */
+function getPhotoDescription(photograph) {
+  switch (parseInt(photograph)) {
+    case 1:
+      return 'classical indoor decoration';
+    case 2:
+      return 'hand-made cheese pizza';
+    case 3:
+      return 'modern dining atmosphere';
+    case 4:
+      return 'colorful and dynamic entrance';
+    case 5:
+      return 'popular friendly environment';
+    case 6:
+      return 'patriotic and popular diner';
+    case 7:
+      return 'cozy welcoming entrance';
+    case 8:
+      return 'daytime clean entrance';
+    case 9:
+      return 'customers enjoying their meal';
+    case 10:
+      return 'very clean modern-mexican environment';
+    default:
+      return 'error';
+  }
+}
+
+/**
+ * Create Responsive image
+ */
+
+function createResponsiveImage(restaurant) {
+  const image = document.getElementById('restaurant-img');
+  image.className = 'restaurant-img';
+  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = `${restaurant.name} restaurant, ${getPhotoDescription(restaurant.photograph)}`;
+
+  const restImg = DBHelper.imageUrlForRestaurant(restaurant).slice(0, -4);
+  image.srcset = `${restImg}_300.webp 300w, ${restImg}_350.webp 350w, ${restImg}_400.webp 400w, ${restImg}_450.webp 450w, ${restImg}_500.webp 500w, ${restImg}_550.webp 550w, ${restImg}_600.webp 600w, ${restImg}_700.webp 700w, ${restImg}_800.webp 800w`;
+  image.sizes = '(max-width: 779px) calc(100vw - 4rem), (min-width: 800px) and (max-width: 1023px) calc(60vw - 4rem), (min-width: 1024px) calc(50vw - 4rem), (min-width: 1600px) 760px, calc(100vw - 4rem)';
+}
